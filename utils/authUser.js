@@ -2,6 +2,8 @@ const AWS = require("aws-sdk");
 
 function authUser(authorization) {
   return new Promise((resolve, reject) => {
+    if (!authorization) resolve(null);
+
     const cognito = new AWS.CognitoIdentityServiceProvider({
       region: "ap-south-1",
     });
