@@ -1,4 +1,5 @@
 require("dotenv").config();
+const { version } = require("./package.json");
 const { ApolloServer, gql } = require("apollo-server");
 const Sentry = require("@sentry/node");
 // const Tracing = require("@sentry/tracing"); // TODO: whats this?
@@ -30,5 +31,6 @@ Sentry.init({
   dsn:
     "https://a8c2792bc3814cc48bcd15ebb3888c95@o468316.ingest.sentry.io/5510948", // TODO: env it
   tracesSampleRate: 1.0,
-  environment: process.env.NODE_ENV,
+  environment: "test",
+  release: version,
 });

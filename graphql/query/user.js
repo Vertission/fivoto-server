@@ -17,10 +17,30 @@ module.exports = {
         cognito: authentication.Username,
       });
 
-      if (!user) return new AuthenticationError("NotAuthorizedException");
+      // insert user
+      if (user) {
+        user.id = user._id;
+        return user;
+      } else {
+        const emailAttribute = authentication.UserAttributes.filter(
+          (attr) => attr.Name === "email"
+        )[0];
 
-      user.id = user._id;
-      return user;
+        const newUser = new User({
+          cognito: authentication.Username,
+          email: emailAttribute.Value,
+          name: emailAttribute.Value.split("@")[0],
+        });
+
+        await newUser.save();
+
+        const user = await User.findOne({
+          cognito: authentication.Username,
+        });
+
+        user.id = user._id;
+        return user;
+      }
     } catch (error) {
       console.log("Query:Me", error);
 
