@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm install
-      - run: pm2 reload server
+        # - run: pm2 reload server
         env:
           CI: true
           SPACE: testManager
