@@ -17,6 +17,7 @@ module.exports = {
         id,
       });
       if (!document) return { id };
+      console.log("ad -> document", document);
 
       return document;
     } catch (error) {

@@ -28,6 +28,7 @@ module.exports = {
         return new AuthenticationError("NotAuthorizedException");
 
       data.user = ObjectID(data.user);
+      data.expireAt = new Date(new Date().getTime() + 10 * 86400000);
 
       const { insertedId } = await MDB.collection("ads").insertOne(data);
       MDB.collection("ads").createIndex({ title: "text", description: "text" });
