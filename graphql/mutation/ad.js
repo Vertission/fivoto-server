@@ -21,6 +21,8 @@ const CB = {};
 
 module.exports = {
   async createAd(_, { data }, { headers }) {
+    console.log("createAd -> data", data);
+
     console.log(chalk.yellow("Mutation: createAd"));
     try {
       const authentication = await authUser(headers.authorization);
@@ -40,6 +42,7 @@ module.exports = {
     }
   },
   async updateAd(_, { data }, { headers }) {
+    console.log("updateAd -> data", data);
     console.log(chalk.yellow("Mutation: updateAd"));
     try {
       const authentication = await authUser(headers.authorization);
