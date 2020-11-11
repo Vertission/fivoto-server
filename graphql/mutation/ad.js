@@ -39,7 +39,6 @@ module.exports = {
     }
   },
   async updateAd(_, { data }, { headers }) {
-    console.log("updateAd -> data", data);
     console.log(chalk.yellow("Mutation: updateAd"));
     try {
       const authentication = await authUser(headers.authorization);
@@ -59,7 +58,6 @@ module.exports = {
         _id: ObjectID(data.id),
         user: user._id,
       });
-      console.log("updateAd -> isDocumentExist", isDocumentExist);
       if (!isDocumentExist)
         return new AuthenticationError("NotAuthorizedException");
 
@@ -93,7 +91,6 @@ module.exports = {
       });
 
       const document = Object.assign({}, oldDocument, data);
-      console.log("updateAd -> document", document);
       document.id = String(document._id);
 
       await MDB.collection("ads").replaceOne(

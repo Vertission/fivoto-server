@@ -8,8 +8,6 @@ const AdMutation = require("./mutation/ad");
 const AdType = require("./types/ad");
 const UserType = require("./types/user");
 
-const s3PrefixDirective = require("./directives/s3Prefix");
-
 module.exports = {
   Query: {
     ...UtilsQuery,
@@ -22,7 +20,4 @@ module.exports = {
   },
   Ad: AdType,
   User: UserType,
-  schemaDirectives: {
-    s3Prefix: s3PrefixDirective,
-  },
 };
