@@ -11,6 +11,8 @@ const resolvers = require("./graphql/resolvers");
 
 const directives = require("./graphql/directives");
 
+console.log(process.env.SPACE);
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
