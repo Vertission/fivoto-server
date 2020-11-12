@@ -22,4 +22,4 @@ jobs:
       - run: pm2 reload server
         env:
           CI: true
-          SPACE: testManager
+          NODE_ENV: testManager

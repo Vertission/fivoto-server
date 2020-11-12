@@ -4,6 +4,7 @@ const Sentry = require("@sentry/node");
 
 const User = require("../../database/remote/schema/user");
 const authUser = require("../../utils/authUser");
+const cognito = require("../../setup/cognito");
 
 module.exports = {
   async me(_, __, { headers }) {
@@ -13,30 +14,49 @@ module.exports = {
       if (!authentication)
         return new AuthenticationError("NotAuthorizedException");
 
-      const user = await User.findOne({
-        cognito: authentication.Username,
-      });
+      const user = await User.findById(authentication.mongodb);
 
-      // insert user
       if (user) {
         user.id = user._id;
         return user;
       } else {
-        const emailAttribute = authentication.UserAttributes.filter(
-          (attr) => attr.Name === "email"
-        )[0];
-
+        // insert user
         const newUser = new User({
-          cognito: authentication.Username,
-          email: emailAttribute.Value,
-          name: emailAttribute.Value.split("@")[0],
+          email: authentication.email,
+          name: authentication.name,
         });
 
         await newUser.save();
 
-        const user = await User.findOne({
-          cognito: authentication.Username,
-        });
+        const user = await User.findById(newUser._id);
+
+        await cognito
+          .adminUpdateUserAttributes(
+            {
+              UserAttributes: [
+                { Name: "custom:mongodb", Value: String(user._id) },
+              ],
+              UserPoolId: process.env.AWS_COGNITO_USER_POOL_ID,
+              Username: authentication.sub,
+            },
+            (error) => {
+              if (error) throw error;
+            }
+          )
+          .promise();
+
+        await cognito
+          .adminDeleteUserAttributes(
+            {
+              UserAttributeNames: ["name"],
+              UserPoolId: process.env.AWS_COGNITO_USER_POOL_ID,
+              Username: authentication.sub,
+            },
+            (error) => {
+              if (error) throw error;
+            }
+          )
+          .promise();
 
         user.id = user._id;
         return user;
@@ -49,7 +69,7 @@ module.exports = {
       scope.setContext("header", headers);
 
       const code = Sentry.captureException(error, scope);
-      return new ApolloError("internalServerError", code);
+      return new ApolloError("InternalServerError", code);
     }
   },
 };

@@ -1,22 +1,30 @@
-const AWS = require("aws-sdk");
+const cognito = require("../setup/cognito");
 
 function authUser(authorization) {
   return new Promise((resolve, reject) => {
     if (!authorization) resolve(null);
 
-    const cognito = new AWS.CognitoIdentityServiceProvider({
-      region: "ap-south-1",
-    });
     cognito.getUser(
       {
         AccessToken: authorization,
       },
       function (error, result) {
         if (error) {
-          if (error.code === "NotAuthorizedException") resolve(null);
+          if (
+            error.code === "NotAuthorizedException" ||
+            error.code === "UserNotFoundException"
+          )
+            resolve(null);
           else reject(error);
         } else {
-          resolve(result);
+          let userObj = {};
+          result.UserAttributes.map(
+            (attr) => (userObj[attr.Name] = attr.Value)
+          );
+
+          userObj.mongodb = userObj["custom:mongodb"];
+
+          resolve(userObj);
         }
       }
     );
