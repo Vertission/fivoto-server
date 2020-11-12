@@ -41,7 +41,7 @@ module.exports = gql`
     email: String
     createdAt: Date
     updatedAt: Date
-    ads: [Ad]
+    publishedAds: [Ad]
   }
 
   type Ad {
