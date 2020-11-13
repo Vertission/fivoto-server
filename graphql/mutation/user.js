@@ -14,8 +14,8 @@ module.exports = {
       if (!authentication)
         return new AuthenticationError("NotAuthorizedException");
 
-      const updatedUser = await User.findOneAndUpdate(
-        { cognito: authentication.Username },
+      const updatedUser = await User.findByIdAndUpdate(
+        authentication.mongodb,
         data,
         { new: true }
       );

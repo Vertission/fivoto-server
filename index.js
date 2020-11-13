@@ -12,8 +12,6 @@ const resolvers = require("./graphql/resolvers");
 
 const directives = require("./graphql/directives");
 
-console.log(process.env.SPACE);
-
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -23,14 +21,14 @@ const server = new ApolloServer({
   schemaDirectives: directives,
 });
 
-server.listen().then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
-});
-
 Sentry.init({
   dsn:
     "https://a8c2792bc3814cc48bcd15ebb3888c95@o468316.ingest.sentry.io/5510948", // TODO: env it
   tracesSampleRate: 1.0,
-  environment: "test",
+  environment: process.env.NODE_ENV,
   release: version,
+});
+
+server.listen().then(({ url }) => {
+  console.log(`🚀  Server ready at ${url}`);
 });

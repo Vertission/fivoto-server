@@ -17,6 +17,10 @@ module.exports = {
         id,
       });
       if (!document) return { id };
+      console.log(
+        "ad -> document",
+        typeof new Date(document.updatedAt).toUTCString()
+      );
 
       return document;
     } catch (error) {

@@ -8,6 +8,9 @@ const AdMutation = require("./mutation/ad");
 const AdType = require("./types/ad");
 const UserType = require("./types/user");
 
+const { GraphQLScalarType } = require("graphql");
+const { Kind } = require("graphql/language");
+
 module.exports = {
   Query: {
     ...UtilsQuery,
@@ -20,4 +23,11 @@ module.exports = {
   },
   Ad: AdType,
   User: UserType,
+  Date: new GraphQLScalarType({
+    name: "Date",
+    description: "Date custom scalar type",
+    parseValue(value) {
+      return new Date(value); // value from the client
+    },
+  }),
 };
