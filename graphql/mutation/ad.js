@@ -1,14 +1,6 @@
-const {
-  ApolloError,
-  AuthenticationError,
-  UserInputError,
-  ValidationError,
-  ForbiddenError,
-} = require("apollo-server");
+const { ApolloError, AuthenticationError } = require("apollo-server");
 const { ObjectID } = require("mongodb");
 const delay = require("delay");
-
-// const slugify = require("slugify");
 
 const chalk = require("chalk");
 
@@ -47,15 +39,10 @@ module.exports = {
       if (!authentication)
         return new AuthenticationError("NotAuthorizedException");
 
-      // get user
-      const user = await User.findById(authentication.mongodb, "id");
-
-      if (!user) return new AuthenticationError("NotAuthorizedException");
-
       // authenticate user with document
       const isDocumentExist = await MDB.collection("ads").countDocuments({
         _id: ObjectID(data.id),
-        user: user._id,
+        user: ObjectID(authentication.mongodb),
       });
       if (!isDocumentExist)
         return new AuthenticationError("NotAuthorizedException");
@@ -105,9 +92,19 @@ module.exports = {
   async deleteAd(_, { id }, { headers }) {
     console.log(chalk.yellow("Mutation: deleteAd"));
     try {
-      await authUser(headers.authorization);
+      const authentication = await authUser(headers.authorization);
+      if (!authentication)
+        return new AuthenticationError("NotAuthorizedException");
 
-      await CB.remove(id);
+      // authenticate user with document
+      const isDocumentExist = await MDB.collection("ads").countDocuments({
+        _id: ObjectID(id),
+        user: ObjectID(authentication.mongodb),
+      });
+      if (!isDocumentExist)
+        return new AuthenticationError("NotAuthorizedException");
+
+      await MDB.collection("ads").deleteOne({ _id: ObjectID(id) });
 
       /**
        * delete advert photos folder
