@@ -62,14 +62,14 @@ module.exports = {
         return user;
       }
     } catch (error) {
-      console.log("Query:Me", error);
+      // console.log("Query:Me", error);
 
       const scope = new Sentry.Scope();
       scope.setTag("resolver", "Query:me");
       scope.setContext("header", headers);
 
       const code = Sentry.captureException(error, scope);
-      return new ApolloError("InternalServerError", code);
+      return new ApolloError("InternalServerError", code, error);
     }
   },
 };
