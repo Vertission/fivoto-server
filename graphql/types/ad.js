@@ -9,6 +9,7 @@ module.exports = {
     console.log(chalk.greenBright("Type:ad.user"));
     try {
       const user = await User.findById(parent.user, "name");
+      if (!user) return null;
 
       user.id = user._id;
       return user;

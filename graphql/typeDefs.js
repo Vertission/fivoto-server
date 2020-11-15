@@ -98,7 +98,6 @@ module.exports = gql`
     phone: [String!]
     fields: JSON
     createdAt: Date
-    user: ID
   }
 
   input updateAdInput {

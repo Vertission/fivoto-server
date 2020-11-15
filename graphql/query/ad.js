@@ -6,21 +6,20 @@ const {
   ForbiddenError,
 } = require("apollo-server");
 const chalk = require("chalk");
+const { ObjectID } = require("mongodb");
 
 const MDB = require("../../database/local");
 
 module.exports = {
   async ad(_, { id }) {
     console.log(chalk.blue("Query: ad"), id);
+
     try {
       const document = await MDB.collection("ads").findOne({
         id,
       });
+
       if (!document) return { id };
-      console.log(
-        "ad -> document",
-        typeof new Date(document.updatedAt).toUTCString()
-      );
 
       return document;
     } catch (error) {
@@ -58,6 +57,15 @@ module.exports = {
         .find(opts)
         .limit(limit)
         .skip(offset)
+        .sort({ createdAt: query ? 1 : -1 })
+        .project({
+          id: 1,
+          title: 1,
+          photos: 1,
+          createdAt: 1,
+          location: 1,
+          price: 1,
+        })
         .toArray();
     } catch (error) {
       console.log("search -> error", error);

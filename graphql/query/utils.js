@@ -9,7 +9,7 @@ const Country = require("../../assets/country.json");
 
 module.exports = {
   location() {
-    console.log(chalk.blue("Query: Location"), TEST_ENV);
+    console.log(chalk.blue("Query: Location"));
     try {
       return Location;
     } catch (error) {

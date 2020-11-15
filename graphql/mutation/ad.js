@@ -1,15 +1,12 @@
 const { ApolloError, AuthenticationError } = require("apollo-server");
 const { ObjectID } = require("mongodb");
-const delay = require("delay");
+const Sentry = require("@sentry/node");
 
 const chalk = require("chalk");
 
-const User = require("../../database/remote/schema/user");
 const MDB = require("../../database/local");
 const authUser = require("../../utils/authUser");
 const S3 = require("../../setup/s3");
-
-const CB = {};
 
 module.exports = {
   async createAd(_, { data }, { headers }) {
@@ -19,17 +16,30 @@ module.exports = {
       if (!authentication)
         return new AuthenticationError("NotAuthorizedException");
 
-      data.user = ObjectID(data.user);
+      data.user = ObjectID(authentication.mongodb);
       data.expireAt = new Date(new Date().getTime() + 10 * 86400000);
       data.status = "APPROVED";
 
       const { insertedId } = await MDB.collection("ads").insertOne(data);
+
+      await MDB.collection("ads").updateOne(
+        { _id: insertedId },
+        { $set: { id: String(insertedId) } }
+      );
+
       MDB.collection("ads").createIndex({ title: "text", description: "text" });
 
       return insertedId;
     } catch (error) {
       console.log("createAd -> error", error);
-      return new ApolloError(error);
+
+      const scope = new Sentry.Scope();
+      scope.setTag("resolver", "Mutation:createAd");
+      scope.setContext("data", data);
+      scope.setContext("header", headers);
+
+      const code = Sentry.captureException(error, scope);
+      return new ApolloError("InternalServerError", code);
     }
   },
   async updateAd(_, { data }, { headers }) {
@@ -77,7 +87,6 @@ module.exports = {
       });
 
       const document = Object.assign({}, oldDocument, data);
-      document.id = String(document._id);
 
       await MDB.collection("ads").replaceOne(
         { _id: ObjectID(data.id) },
@@ -86,7 +95,14 @@ module.exports = {
       return document;
     } catch (error) {
       console.log("updateAd -> error", error);
-      return new ApolloError(error);
+
+      const scope = new Sentry.Scope();
+      scope.setTag("resolver", "Mutation:updateAd");
+      scope.setContext("data", data);
+      scope.setContext("header", headers);
+
+      const code = Sentry.captureException(error, scope);
+      return new ApolloError("InternalServerError", code);
     }
   },
   async deleteAd(_, { id }, { headers }) {
@@ -132,19 +148,15 @@ module.exports = {
 
       return id;
     } catch (error) {
-      console.log("updateUser -> error", error);
-      // if (error.code === "NotAuthorizedException")
-      //   return new AuthenticationError("NotAuthorizedException");
-      // else {
-      //   const scope = new Sentry.Scope();
-      //   scope.setTag("resolver", "Mutation:deleteAd");
-      //   scope.setTag("server", true);
-      //   scope.setContext("data", { id });
-      //   scope.setContext("header", headers);
+      console.log("deleteAd -> error", error);
 
-      //   const code = Sentry.captureException(error, scope);
-      //   return new ApolloError("internalServerError", code);
-      // }
+      const scope = new Sentry.Scope();
+      scope.setTag("resolver", "Mutation:deleteAd");
+      scope.setContext("data", { id });
+      scope.setContext("header", headers);
+
+      const code = Sentry.captureException(error, scope);
+      return new ApolloError("InternalServerError", code);
     }
   },
 };
