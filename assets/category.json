@@ -1,0 +1,121 @@
+[
+  {
+    "category": "device",
+    "items": [
+      "mobile phones",
+      "mobile phone accessories",
+      "computers & tablets",
+      "computer accessories",
+      "video games & consoles",
+      "other devices"
+    ],
+    "image": "https://srilanka95142-prod.s3.ap-south-1.amazonaws.com/assets/category/device.png"
+  },
+  {
+    "category": "vehicle",
+    "items": [
+      "cars & vans",
+      "bikes & scooters",
+      "three-wheelers",
+      "lorries & heavy vehicles",
+      "boats & water transports",
+      "auto parts & Accessories",
+      "other vehicles"
+    ],
+    "image": "https://srilanka95142-prod.s3.ap-south-1.amazonaws.com/assets/category/vehicle.png"
+  },
+  {
+    "category": "property",
+    "items": [
+      "houses & apartments",
+      "commercial properties",
+      "lands",
+      "new developments",
+      "other properties"
+    ],
+    "image": "https://srilanka95142-prod.s3.ap-south-1.amazonaws.com/assets/category/property.png"
+  },
+  {
+    "category": "appliances & furniture",
+    "items": [
+      "electronic appliances",
+
+      "kitchenwares",
+      "furnitures",
+      "bathroom & sanitary wares",
+      "decor & garden",
+
+      "other appliances & furnitures"
+    ],
+    "image": "https://srilanka95142-prod.s3.ap-south-1.amazonaws.com/assets/category/appliancesFurniture.png"
+  },
+  {
+    "category": "sports & hobby",
+    "items": [
+      "gym, fitness equipments",
+      "musical instruments",
+      "books, musics & movies",
+      "sport equipments",
+      "antiques & collectibles",
+      "toys & indoor games",
+      "other sports & hobbies"
+    ],
+    "image": "https://srilanka95142-prod.s3.ap-south-1.amazonaws.com/assets/category/sportHobby.png"
+  },
+  {
+    "category": "fashion & Beauty",
+    "items": [
+      "mens clothing",
+      "womans clothing",
+      "kids & babies clothing",
+      "clothing & fashion accessories",
+      "footwears",
+      "bags & Luggages",
+      "cosmetics & beauty products",
+      "other fashion & Beauty"
+    ],
+    "image": "https://srilanka95142-prod.s3.ap-south-1.amazonaws.com/assets/category/fashionBeauty.png"
+  },
+  {
+    "category": "pet & animal",
+    "items": [
+      "fishes & aquarium",
+      "birds",
+      "farm & domestic animals",
+      "cats & dogs",
+      "foods",
+      "accessories",
+      "other pets & animals"
+    ],
+    "image": "https://srilanka95142-prod.s3.ap-south-1.amazonaws.com/assets/category/petAnimal.png"
+  },
+  {
+    "category": "business & industrial",
+    "items": [
+      "machineries & supplies",
+      "tools & equipments",
+      "raw materials & wholesales",
+      "building materials",
+      "other business & industrials"
+    ],
+    "image": "https://srilanka95142-prod.s3.ap-south-1.amazonaws.com/assets/category/businessIndustrial.png"
+  },
+  {
+    "category": "food & agriculture",
+    "items": [
+      "food",
+      "grocery",
+      "crops & seeds",
+      "vegetables & fruits",
+      "meats & seafoods",
+      "plants & flowers",
+      "other foods & agricultures"
+    ],
+    "image": "https://srilanka95142-prod.s3.ap-south-1.amazonaws.com/assets/category/foodAgriculture.png"
+  },
+  {
+    "category": "other",
+    "items": ["others"],
+    "image": "https://srilanka95142-prod.s3.ap-south-1.amazonaws.com/assets/category/other.png"
+  }
+]
