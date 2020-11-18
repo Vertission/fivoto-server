@@ -17,7 +17,7 @@ module.exports = {
         return new AuthenticationError("NotAuthorizedException");
 
       data.user = ObjectID(authentication.mongodb);
-      data.expireAt = new Date(new Date().getTime() + 10 * 86400000);
+      data.expireAt = new Date(new Date().getTime() + 1 * 86400000); // expire after 1 day
       data.status = "APPROVED";
 
       const { insertedId } = await MDB.collection("ads").insertOne(data);
@@ -28,6 +28,10 @@ module.exports = {
       );
 
       MDB.collection("ads").createIndex({ title: "text", description: "text" });
+      MDB.collection("ads").createIndex(
+        { expireAt: 1 },
+        { expireAfterSeconds: 0 }
+      );
 
       return insertedId;
     } catch (error) {
