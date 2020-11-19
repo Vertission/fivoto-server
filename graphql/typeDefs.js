@@ -57,6 +57,7 @@ module.exports = gql`
     fields: JSON
     createdAt: Date
     updatedAt: Date
+    expireAt: Date
     user: User
   }
 
