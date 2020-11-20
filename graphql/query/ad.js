@@ -29,11 +29,7 @@ module.exports = {
   async ads() {
     console.log(chalk.blue("Query: ads"));
     try {
-      const res = await MDB.collection("ads").find({}).toArray();
-
-      console.log(res);
-
-      return res;
+      return await MDB.collection("ads").find({}).toArray();
     } catch (error) {
       console.log("ads -> error", error);
     }
@@ -65,7 +61,7 @@ module.exports = {
 
       console.log("search -> opts", opts);
 
-      const cursor = MDB.collection("ads")
+      const cursor = await MDB.collection("ads")
         .find(opts)
         .limit(limit)
         .skip(offset)

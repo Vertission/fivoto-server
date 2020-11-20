@@ -76,6 +76,10 @@ module.exports = gql`
 
   type SearchQuery {
     ads: [Ad]
+    meta: SearchQueryMeta
+  }
+
+  type SearchQueryMeta {
     total: Int
   }
 
