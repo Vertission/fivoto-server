@@ -26,6 +26,18 @@ module.exports = {
       console.log("ad -> error", error);
     }
   },
+  async ads() {
+    console.log(chalk.blue("Query: ads"));
+    try {
+      const res = await MDB.collection("ads").find({}).toArray();
+
+      console.log(res);
+
+      return res;
+    } catch (error) {
+      console.log("ads -> error", error);
+    }
+  },
   async search(_, { query, category, location, offset, limit }) {
     console.log(chalk.blue("Query: search"));
     try {
