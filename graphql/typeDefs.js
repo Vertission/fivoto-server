@@ -9,7 +9,7 @@ module.exports = gql`
     me: User!
     # ad
     ad(id: ID!): Ad!
-    ads: [ID]
+    ads: [Ad]
     search(
       offset: Int
       limit: Int
