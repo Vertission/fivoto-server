@@ -53,7 +53,7 @@ module.exports = {
 
       console.log("search -> opts", opts);
 
-      return await MDB.collection("ads")
+      const cursor = MDB.collection("ads")
         .find(opts)
         .limit(limit)
         .skip(offset)
@@ -65,8 +65,12 @@ module.exports = {
           createdAt: 1,
           location: 1,
           price: 1,
-        })
-        .toArray();
+        });
+
+      return {
+        ads: cursor.toArray(),
+        total: cursor.count(),
+      };
     } catch (error) {
       console.log("search -> error", error);
     }
