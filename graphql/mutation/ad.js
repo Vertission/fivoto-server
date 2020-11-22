@@ -1,16 +1,15 @@
+const config = require("../../config/index.json");
 const { ApolloError, AuthenticationError } = require("apollo-server");
 const { ObjectID } = require("mongodb");
 const Sentry = require("@sentry/node");
 
-const chalk = require("chalk");
-
 const MDB = require("../../database/local");
 const authUser = require("../../utils/authUser");
-const S3 = require("../../setup/s3");
+const S3 = require("../../setup/aws/s3");
 
 module.exports = {
   async createAd(_, { data }, { headers }) {
-    console.log(chalk.yellow("Mutation: createAd"));
+    console.log("Mutation:createAd");
     try {
       const authentication = await authUser(headers.authorization);
       if (!authentication)
@@ -47,7 +46,7 @@ module.exports = {
     }
   },
   async updateAd(_, { data }, { headers }) {
-    console.log(chalk.yellow("Mutation: updateAd"));
+    console.log("Mutation: updateAd");
     try {
       const authentication = await authUser(headers.authorization);
       if (!authentication)
@@ -66,10 +65,10 @@ module.exports = {
        */
       if (data.removePhotos && data.removePhotos.length) {
         const keys = data.removePhotos.map((key) => ({
-          Key: `public/${key.replace(process.env.S3PREFIX, "")}`,
+          Key: `public/${key.replace(config.s3_prefix, "")}`,
         }));
         const params = {
-          Bucket: process.env.AWS_BUCKET,
+          Bucket: config.aws.BUCKET,
           Delete: { Objects: keys },
         };
         S3.deleteObjects(params, (error, data) => {
@@ -80,7 +79,7 @@ module.exports = {
 
       if (data.photos) {
         data.photos = data.photos.map((photo) =>
-          photo.replace(process.env.AWS_S3PREFIX, "")
+          photo.replace(config.s3_prefix, "")
         );
 
         delete data.removePhotos;
@@ -110,7 +109,7 @@ module.exports = {
     }
   },
   async deleteAd(_, { id }, { headers }) {
-    console.log(chalk.yellow("Mutation: deleteAd"));
+    console.log("Mutation:deleteAd");
     try {
       const authentication = await authUser(headers.authorization);
       if (!authentication)
@@ -131,12 +130,12 @@ module.exports = {
        */
 
       S3.listObjects(
-        { Bucket: process.env.AWS_BUCKET, Prefix: `public/ads/${id}` },
+        { Bucket: config.aws.BUCKET, Prefix: `public/ads/${id}` },
         function (error, data) {
           if (error) return console.log(error);
           if (data.Contents.length == 0) return null;
 
-          let params = { Bucket: process.env.AWS_BUCKET };
+          let params = { Bucket: config.aws.BUCKET };
           params.Delete = { Objects: [] };
 
           data.Contents.forEach(function (content) {

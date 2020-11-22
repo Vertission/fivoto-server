@@ -1,19 +1,17 @@
 const { ApolloError } = require("apollo-server");
 const Sentry = require("@sentry/node");
 
-const chalk = require("chalk");
-
 const Location = require("../../assets/location.json");
 const Category = require("../../assets/category.json");
 const Country = require("../../assets/country.json");
 
 module.exports = {
   location() {
-    console.log(chalk.blue("Query: Location"));
+    console.log("Query:location");
     try {
       return Location;
     } catch (error) {
-      console.log("Query:Location", error);
+      console.log("Query:location", error);
 
       const scope = new Sentry.Scope();
       scope.setTag("resolver", "Query:location");
@@ -23,7 +21,7 @@ module.exports = {
     }
   },
   category() {
-    console.log(chalk.blue("Query: Category"));
+    console.log("Query:category");
     try {
       return Category;
     } catch (error) {
@@ -37,7 +35,7 @@ module.exports = {
     }
   },
   country() {
-    console.log(chalk.blue("Query: Country"));
+    console.log("Query:country");
     try {
       return Country;
     } catch (error) {

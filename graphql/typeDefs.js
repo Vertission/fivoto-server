@@ -15,7 +15,7 @@ module.exports = gql`
       query: String
       category: categoryInput
       location: locationInput
-    ): QuerySearch
+    ): QuerySearch!
     # utils
     location: JSON
     category: JSON

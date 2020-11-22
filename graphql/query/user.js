@@ -1,14 +1,15 @@
+const config = require("../../config/index.json");
 const { ApolloError, AuthenticationError } = require("apollo-server");
 const chalk = require("chalk");
 const Sentry = require("@sentry/node");
 
 const User = require("../../database/remote/schema/user");
 const authUser = require("../../utils/authUser");
-const cognito = require("../../setup/cognito");
+const cognito = require("../../setup/aws/cognito");
 
 module.exports = {
   async me(_, __, { headers }) {
-    console.log(chalk.blue("Query: me"));
+    console.log("Query:me");
     try {
       const authentication = await authUser(headers.authorization);
       if (!authentication)
@@ -36,7 +37,7 @@ module.exports = {
               UserAttributes: [
                 { Name: "custom:mongodb", Value: String(user._id) },
               ],
-              UserPoolId: process.env.AWS_COGNITO_USER_POOL_ID,
+              UserPoolId: config.aws.COGNITO_USER_POOL_ID,
               Username: authentication.sub,
             },
             (error) => {
@@ -49,7 +50,7 @@ module.exports = {
           .adminDeleteUserAttributes(
             {
               UserAttributeNames: ["name"],
-              UserPoolId: process.env.AWS_COGNITO_USER_POOL_ID,
+              UserPoolId: config.aws.COGNITO_USER_POOL_ID,
               Username: authentication.sub,
             },
             (error) => {
@@ -62,7 +63,7 @@ module.exports = {
         return user;
       }
     } catch (error) {
-      // console.log("Query:Me", error);
+      console.log("Query:Me", error);
 
       const scope = new Sentry.Scope();
       scope.setTag("resolver", "Query:me");

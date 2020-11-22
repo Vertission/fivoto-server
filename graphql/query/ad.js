@@ -1,19 +1,9 @@
-const {
-  ApolloError,
-  AuthenticationError,
-  UserInputError,
-  ValidationError,
-  ForbiddenError,
-} = require("apollo-server");
-const chalk = require("chalk");
-const { ObjectID } = require("mongodb");
-
 const MDB = require("../../database/local");
+const Sentry = require("@sentry/node");
 
 module.exports = {
   async ad(_, { id }) {
-    console.log(chalk.blue("Query: ad"), id);
-
+    console.log("Query:ad", id);
     try {
       const document = await MDB.collection("ads").findOne({
         id,
@@ -23,11 +13,18 @@ module.exports = {
 
       return document;
     } catch (error) {
-      console.log("ad -> error", error);
+      console.log("Query:ad", error);
+
+      const scope = new Sentry.Scope();
+      scope.setTag("resolver", "Query:ad");
+      scope.setContext("data", { id });
+
+      const code = Sentry.captureException(error, scope);
+      return new ApolloError("InternalServerError", code, error);
     }
   },
   async search(_, { query, category, location, offset, limit }) {
-    console.log(chalk.blue("Query: search"));
+    console.log("Query:search");
     try {
       const opts = {};
 
@@ -66,7 +63,14 @@ module.exports = {
         total: cursor.count(),
       };
     } catch (error) {
-      console.log("search -> error", error);
+      console.log("Query:search", error);
+
+      const scope = new Sentry.Scope();
+      scope.setTag("resolver", "Query:search");
+      scope.setContext("data", { query, category, location, offset, limit });
+
+      const code = Sentry.captureException(error, scope);
+      return new ApolloError("InternalServerError", code, error);
     }
   },
 };
