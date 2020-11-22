@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: test-hosted
+    runs-on: server-stage
 
     strategy:
       matrix:
