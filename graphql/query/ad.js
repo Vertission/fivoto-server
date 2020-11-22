@@ -26,23 +26,9 @@ module.exports = {
       console.log("ad -> error", error);
     }
   },
-  async ads() {
-    console.log(chalk.blue("Query: ads"));
-    try {
-      return await MDB.collection("ads").find({}).toArray();
-    } catch (error) {
-      console.log("ads -> error", error);
-    }
-  },
   async search(_, { query, category, location, offset, limit }) {
     console.log(chalk.blue("Query: search"));
     try {
-      console.log("search -> limit", limit);
-      console.log("search -> offset", offset);
-      console.log("search -> location", location);
-      console.log("search -> category", category);
-      console.log("search -> query", query);
-
       const opts = {};
 
       if (query) {
@@ -59,7 +45,7 @@ module.exports = {
         if (category.item) opts["category.item"] = category.item;
       }
 
-      console.log("search -> opts", opts);
+      console.log("opts >", opts);
 
       const cursor = await MDB.collection("ads")
         .find(opts)

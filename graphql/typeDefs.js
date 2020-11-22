@@ -9,14 +9,13 @@ module.exports = gql`
     me: User!
     # ad
     ad(id: ID!): Ad!
-    ads: [Ad]
     search(
       offset: Int
       limit: Int
       query: String
       category: categoryInput
       location: locationInput
-    ): SearchQuery!
+    ): QuerySearch
     # utils
     location: JSON
     category: JSON
@@ -74,12 +73,8 @@ module.exports = gql`
 
   ## Queries
 
-  type SearchQuery {
+  type QuerySearch {
     ads: [Ad]
-    meta: SearchQueryMeta
-  }
-
-  type SearchQueryMeta {
     total: Int
   }
 
