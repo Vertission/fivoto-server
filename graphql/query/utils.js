@@ -1,9 +1,9 @@
 const { ApolloError } = require("apollo-server");
 const Sentry = require("@sentry/node");
 
-const Location = require("../../assets/location.json");
-const Category = require("../../assets/category.json");
-const Country = require("../../assets/country.json");
+const Location = require("../../config/assets/location.json");
+const Category = require("../../config/assets/category.json");
+const Country = require("../../config/assets/country.json");
 
 module.exports = {
   location() {
