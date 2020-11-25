@@ -15,7 +15,7 @@ module.exports = gql`
       query: String
       category: categoryInput
       location: locationInput
-    ): [Ad]!
+    ): QuerySearch!
     # utils
     location: JSON
     category: JSON
@@ -57,6 +57,7 @@ module.exports = gql`
     fields: JSON
     createdAt: Date
     updatedAt: Date
+    expireAt: Date
     user: User
   }
 
@@ -68,6 +69,13 @@ module.exports = gql`
   type Category {
     field: String
     item: String
+  }
+
+  ## Queries
+
+  type QuerySearch {
+    ads: [Ad]
+    total: Int
   }
 
   ## ENUMS

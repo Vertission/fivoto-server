@@ -1,4 +1,4 @@
-const cognito = require("../setup/cognito");
+const cognito = require("../setup/aws/cognito");
 
 function authUser(authorization) {
   return new Promise((resolve, reject) => {

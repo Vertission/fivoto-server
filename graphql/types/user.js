@@ -1,4 +1,4 @@
-const { ApolloError, AuthenticationError } = require("apollo-server");
+const { ApolloError } = require("apollo-server");
 const Sentry = require("@sentry/node");
 const MDB = require("../../database/local");
 
