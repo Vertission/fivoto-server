@@ -42,8 +42,6 @@ module.exports = {
         if (category.item) opts["category.item"] = category.item;
       }
 
-      console.log("opts >", opts);
-
       const cursor = await MDB.collection("ads")
         .find(opts)
         .limit(limit)
