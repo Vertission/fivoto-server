@@ -4,6 +4,8 @@ const mongoist = require('../../database/local/mongoist');
 const Sentry = require('@sentry/node');
 const MongoPaging = require('mongo-cursor-pagination');
 
+const delay = require('delay');
+
 module.exports = {
   async ad(_, { id }) {
     console.log('Query:ad', id);
@@ -75,7 +77,6 @@ module.exports = {
     }
   },
   async search_relay(_, { first, after, filter }) {
-    console.log('🚀 after', after);
     try {
       const findOpts = {};
 
@@ -115,8 +116,13 @@ module.exports = {
         },
       });
 
+      const edges = results.map((node) => ({
+        cursor: node.id,
+        node: { ...node, photos: [node.photos] },
+      }));
+
       return {
-        edges: { node: results },
+        edges,
         pageInfo: {
           endCursor: next,
           startCursor: previous,
@@ -136,6 +142,8 @@ module.exports = {
     }
   },
   async adPhotos(_, { id }) {
+    console.log('Query:adPhotos');
+    await delay(1000 * 5);
     try {
       return await mongoist
         .collection('ads')

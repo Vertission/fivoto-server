@@ -18,7 +18,11 @@ module.exports = gql`
       location: locationInput
     ): QuerySearch!
     # relay style pagination
-    search_relay(first: Int, after: ID, filter: searchFilterInput): JSON
+    search_relay(
+      first: Int
+      after: ID
+      filter: searchFilterInput
+    ): QuerySearch_relay
     # utils
     location: JSON
     category: JSON
@@ -75,6 +79,23 @@ module.exports = gql`
   }
 
   ## Queries
+
+  type QuerySearch_relay {
+    edges: [AdEdge]
+    pageInfo: PageInfo!
+  }
+
+  type PageInfo {
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+    endCursor: String
+  }
+
+  type AdEdge {
+    cursor: String
+    node: Ad
+  }
 
   type QuerySearch {
     ads: [Ad]
