@@ -125,7 +125,30 @@ module.exports = {
         },
       };
     } catch (error) {
-      console.log('🚀 ~ file: ad.js ~ line 78 ~ search_relay ~ error', error);
+      console.log('Query:search_relay', error);
+
+      const scope = new Sentry.Scope();
+      scope.setTag('resolver', 'Query:search_relay');
+      scope.setContext('data', { query, category, location, offset, limit });
+
+      const code = Sentry.captureException(error, scope);
+      return new ApolloError('InternalServerError', code, error);
+    }
+  },
+  async adPhotos(_, { id }) {
+    try {
+      return await mongoist
+        .collection('ads')
+        .findOne({ id }, { photos: 1, id: 1 });
+    } catch (error) {
+      console.log('Query:adPhotos', error);
+
+      const scope = new Sentry.Scope();
+      scope.setTag('resolver', 'Query:adPhotos');
+      scope.setContext('data', { query, category, location, offset, limit });
+
+      const code = Sentry.captureException(error, scope);
+      return new ApolloError('InternalServerError', code, error);
     }
   },
 };

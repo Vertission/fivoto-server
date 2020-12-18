@@ -9,6 +9,7 @@ module.exports = gql`
     me: User!
     # ad
     ad(id: ID!): Ad!
+    adPhotos(id: ID!): Ad!
     search(
       offset: Int
       limit: Int
