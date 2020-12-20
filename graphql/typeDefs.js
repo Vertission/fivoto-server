@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server");
+const { gql } = require('apollo-server');
 
 module.exports = gql`
   scalar Date
@@ -9,6 +9,7 @@ module.exports = gql`
     me: User!
     # ad
     ad(id: ID!): Ad!
+    adPhotos(id: ID!): Ad!
     search(
       offset: Int
       limit: Int
@@ -16,6 +17,12 @@ module.exports = gql`
       category: categoryInput
       location: locationInput
     ): QuerySearch!
+    # relay style pagination
+    search_relay(
+      first: Int
+      after: ID
+      filter: searchFilterInput
+    ): QuerySearch_relay
     # utils
     location: JSON
     category: JSON
@@ -72,6 +79,23 @@ module.exports = gql`
   }
 
   ## Queries
+
+  type QuerySearch_relay {
+    edges: [AdEdge]
+    pageInfo: PageInfo!
+  }
+
+  type PageInfo {
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+    endCursor: String
+  }
+
+  type AdEdge {
+    cursor: String
+    node: Ad
+  }
 
   type QuerySearch {
     ads: [Ad]
@@ -138,5 +162,11 @@ module.exports = gql`
     category: categoryInput
     limit: Int
     offset: Int
+  }
+
+  input searchFilterInput {
+    query: String
+    category: categoryInput
+    location: locationInput
   }
 `;
