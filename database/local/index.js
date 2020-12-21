@@ -1,10 +1,10 @@
-const MongoClient = require("mongodb").MongoClient;
+const MongoClient = require('mongodb').MongoClient;
 
 // Connection URL
-const url = "mongodb://localhost:27017";
+const url = 'mongodb://localhost:27017';
 
 // Database Name
-const dbName = "fivoto";
+const dbName = 'fivoto';
 
 // Create a new MongoClient
 const client = new MongoClient(url, { useUnifiedTopology: true });
@@ -15,7 +15,7 @@ client.connect(function (err) {
     console.error(err);
     client.close();
   } else {
-    console.log("Mongodb:Local Connected successfully");
+    console.log('Mongodb:Local Connected successfully');
     client.db(dbName);
   }
 });

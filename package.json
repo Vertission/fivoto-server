@@ -25,7 +25,9 @@
     "aws-sdk": "^2.788.0",
     "dotenv": "^8.2.0",
     "graphql": "^15.4.0",
+    "mongo-cursor-pagination": "^7.3.1",
     "mongodb": "^3.6.3",
+    "mongoist": "^2.5.3",
     "mongoose": "^5.10.13",
     "slugify": "^1.4.6"
   },
