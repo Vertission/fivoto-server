@@ -1,15 +1,15 @@
-require("dotenv").config();
-const { ApolloServer } = require("apollo-server");
+require('dotenv').config();
+const { ApolloServer } = require('apollo-server');
 
-require("./setup/sentry");
-require("./setup/aws");
-require("./database/local");
-require("./database/remote");
+require('./setup/sentry');
+require('./setup/aws');
+require('./database/local');
+require('./database/remote');
 
-const typeDefs = require("./graphql/typeDefs");
-const resolvers = require("./graphql/resolvers");
+const typeDefs = require('./graphql/typeDefs');
+const resolvers = require('./graphql/resolvers');
 
-const directives = require("./graphql/directives");
+const directives = require('./graphql/directives');
 
 const server = new ApolloServer({
   typeDefs,
@@ -18,6 +18,7 @@ const server = new ApolloServer({
     return { headers: req.headers };
   },
   schemaDirectives: directives,
+  playground: process.env.NODE_ENV === 'development',
 });
 
 server.listen().then(({ url }) => {
