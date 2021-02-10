@@ -77,6 +77,8 @@ module.exports = {
     }
   },
   async search_relay(_, { first, after, filter }) {
+    console.log('first, after, filter', first, after, filter);
+    console.log('Query:search_relay');
     try {
       const findOpts = {};
 
@@ -96,13 +98,7 @@ module.exports = {
         if (category.item) findOpts['category.item'] = category.item;
       }
 
-      const {
-        results,
-        next,
-        previous,
-        hasNext,
-        hasPrevious,
-      } = await MongoPaging.find(mongoist.collection('ads'), {
+      const { results, next, previous, hasNext, hasPrevious } = await MongoPaging.find(mongoist.collection('ads'), {
         query: findOpts,
         limit: first,
         next: after,
@@ -145,9 +141,7 @@ module.exports = {
     console.log('Query:adPhotos');
     await delay(1000 * 5);
     try {
-      return await mongoist
-        .collection('ads')
-        .findOne({ id }, { photos: 1, id: 1 });
+      return await mongoist.collection('ads').findOne({ id }, { photos: 1, id: 1 });
     } catch (error) {
       console.log('Query:adPhotos', error);
 

@@ -10,23 +10,14 @@ module.exports = gql`
     # ad
     ad(id: ID!): Ad!
     adPhotos(id: ID!): Ad!
-    search(
-      offset: Int
-      limit: Int
-      query: String
-      category: categoryInput
-      location: locationInput
-    ): QuerySearch!
+    search(offset: Int, limit: Int, query: String, category: categoryInput, location: locationInput): QuerySearch!
     # relay style pagination
-    search_relay(
-      first: Int
-      after: ID
-      filter: searchFilterInput
-    ): QuerySearch_relay
+    search_relay(first: Int, after: ID, filter: searchFilterInput): QuerySearch_relay
     # utils
-    location: JSON
-    category: JSON
-    country: JSON
+    location: JSON!
+    category: JSON!
+    country: JSON!
+    fields: JSON!
   }
 
   # custom directives
