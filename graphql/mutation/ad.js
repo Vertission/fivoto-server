@@ -10,12 +10,12 @@ module.exports = {
   async createAd(_, { data }, { headers }) {
     console.log('Mutation:createAd');
     try {
-      const authentication = await authUser(headers.authorization);
-      if (!authentication) return new AuthenticationError('NotAuthorizedException');
+      // const authentication = await authUser(headers.authorization);
+      // if (!authentication) return new AuthenticationError('NotAuthorizedException');
 
-      data.user = ObjectID(authentication.mongodb);
+      // data.user = ObjectID(authentication.mongodb);
       data.expireAt = new Date(new Date().getTime() + 41 * 86400000); // expire after 41 day
-      data.status = 'APPROVED';
+      // data.status = 'APPROVED';
 
       const { insertedId } = await MDB.collection('ads').insertOne(data);
 
@@ -38,21 +38,19 @@ module.exports = {
     }
   },
   async updateAd(_, { data }, { headers }) {
+    console.log('🚀 ~ file: ad.js ~ line 41 ~ updateAd ~ data', data);
     console.log('Mutation: updateAd');
     try {
-      const authentication = await authUser(headers.authorization);
-      if (!authentication) return new AuthenticationError('NotAuthorizedException');
+      // const authentication = await authUser(headers.authorization);
+      // if (!authentication) return new AuthenticationError('NotAuthorizedException');
 
       // authenticate user with document
-      const isDocumentExist = await MDB.collection('ads').countDocuments({
-        _id: ObjectID(data.id),
-        user: ObjectID(authentication.mongodb),
-      });
-      if (!isDocumentExist) return new AuthenticationError('NotAuthorizedException');
+      // const isDocumentExist = await MDB.collection('ads').countDocuments({
+      //   _id: ObjectID(data.id),
+      //   user: ObjectID(authentication.mongodb),
+      // });
+      // if (!isDocumentExist) return new AuthenticationError('NotAuthorizedException');
 
-      /**
-       * remove objects from s3
-       */
       if (data.removePhotos && data.removePhotos.length) {
         const keys = data.removePhotos.map((key) => ({
           Key: `public/${key.replace(process.env.AWS_S3_PREFIX, '')}`,
@@ -80,7 +78,7 @@ module.exports = {
       const document = Object.assign({}, oldDocument, data);
 
       await MDB.collection('ads').replaceOne({ _id: ObjectID(data.id) }, document);
-      return document;
+      return document._id;
     } catch (error) {
       console.log('updateAd -> error', error);
 
