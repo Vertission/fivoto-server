@@ -1,7 +1,7 @@
 const { ApolloError, AuthenticationError } = require('apollo-server');
 const Sentry = require('@sentry/node');
 
-const User = require('../../database/remote/schema/user');
+const User = require('../../database/remote/model/user');
 const authUser = require('../../utils/authUser');
 const cognito = require('../../setup/aws/cognito');
 
@@ -12,11 +12,11 @@ module.exports = {
       const authentication = await authUser(headers.authorization);
       if (!authentication) return new AuthenticationError('NotAuthorizedException');
 
-      const user = await User.findById(authentication.mongodb);
+      const user = await User.findById(authentication.mongodb).lean();
 
       if (user) {
         user.id = user._id;
-        return { ...user, email: authentication.email };
+        return { ...user, email: authentication.email, email_verified: authentication.email_verified };
       } else {
         // insert user
         const newUser = new User({

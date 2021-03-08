@@ -37,6 +37,7 @@ module.exports = gql`
     id: ID!
     name: String
     email: String
+    email_verified: Boolean
     profile: String @s3Prefix
     createdAt: Date
     updatedAt: Date
