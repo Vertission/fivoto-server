@@ -109,7 +109,6 @@ module.exports = gql`
   ## INPUT
   input updateUserInput {
     name: String
-    email: String
     profile: String
   }
 

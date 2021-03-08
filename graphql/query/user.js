@@ -16,11 +16,10 @@ module.exports = {
 
       if (user) {
         user.id = user._id;
-        return user;
+        return { ...user, email: authentication.email };
       } else {
         // insert user
         const newUser = new User({
-          email: authentication.email,
           name: authentication.name,
         });
 
