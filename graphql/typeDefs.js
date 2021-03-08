@@ -37,6 +37,7 @@ module.exports = gql`
     id: ID!
     name: String
     email: String
+    profile: String @s3Prefix
     createdAt: Date
     updatedAt: Date
     publishedAds: [Ad]
@@ -109,6 +110,7 @@ module.exports = gql`
   input updateUserInput {
     name: String
     email: String
+    profile: String
   }
 
   input createAdInput { # TODO: make those fields required
