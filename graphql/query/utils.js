@@ -7,6 +7,22 @@ const Country = require('../../config/assets/country.json');
 const Fields = require('../../config/assets/field.json');
 
 module.exports = {
+  config() {
+    console.log('Query:config');
+    try {
+      return {
+        S3_PREFIX: process.env.AWS_S3_PREFIX,
+      };
+    } catch (error) {
+      console.log('Query:config', error);
+
+      const scope = new Sentry.Scope();
+      scope.setTag('resolver', 'Query:config');
+
+      const code = Sentry.captureException(error, scope);
+      return new ApolloError('InternalServerError', code, error);
+    }
+  },
   location() {
     console.log('Query:location');
     try {
