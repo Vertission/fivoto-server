@@ -17,8 +17,7 @@ module.exports = {
 
       if (!updatedUser) return new AuthenticationError('NotAuthorizedException');
 
-      updatedUser.id = updatedUser._id;
-      return updatedUser;
+      return updatedUser.id;
     } catch (error) {
       console.log('updateUser -> error', error);
 

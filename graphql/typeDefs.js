@@ -14,6 +14,7 @@ module.exports = gql`
     # relay style pagination
     search_relay(first: Int, after: ID, filter: searchFilterInput): QuerySearch_relay
     # utils
+    config: JSON!
     location: JSON!
     category: JSON!
     country: JSON!
@@ -26,7 +27,7 @@ module.exports = gql`
 
   type Mutation {
     # user
-    updateUser(data: updateUserInput!): User!
+    updateUser(name: String, profile: String): ID!
     # ad
     createAd(data: createAdInput!): ID!
     updateAd(data: updateAdInput!): ID!
@@ -105,12 +106,6 @@ module.exports = gql`
     SELL
     BUY
     RENT
-  }
-
-  ## INPUT
-  input updateUserInput {
-    name: String
-    profile: String
   }
 
   input createAdInput { # TODO: make those fields required

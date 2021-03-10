@@ -1,5 +1,6 @@
 const { ApolloError, AuthenticationError } = require('apollo-server');
 const Sentry = require('@sentry/node');
+const { boolean } = require('boolean');
 
 const User = require('../../database/remote/model/user');
 const authUser = require('../../utils/authUser');
@@ -14,6 +15,8 @@ module.exports = {
 
       const user = await User.findById(authentication.mongodb).lean();
 
+      authentication.email_verified = boolean(authentication.email_verified);
+
       if (user) {
         user.id = user._id;
         return { ...user, email: authentication.email, email_verified: authentication.email_verified };
@@ -21,6 +24,7 @@ module.exports = {
         // insert user
         const newUser = new User({
           name: authentication.name,
+          profile: null,
         });
 
         await newUser.save();
