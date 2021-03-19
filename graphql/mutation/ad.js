@@ -15,7 +15,7 @@ module.exports = {
 
       // data.user = ObjectID(authentication.mongodb);
       data.expireAt = new Date(new Date().getTime() + 41 * 86400000); // expire after 41 day
-      // data.status = 'APPROVED';
+      data.status = 'APPROVED';
 
       const { insertedId } = await MDB.collection('ads').insertOne(data);
 

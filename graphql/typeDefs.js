@@ -10,9 +10,7 @@ module.exports = gql`
     # ad
     ad(id: ID!): Ad!
     adPhotos(id: ID!): Ad!
-    search(offset: Int, limit: Int, query: String, category: categoryInput, location: locationInput): QuerySearch!
-    # relay style pagination
-    search_relay(first: Int, after: ID, filter: searchFilterInput): QuerySearch_relay
+    ads(first: Int, after: String, filter: searchFilterInput): Ads!
     # utils
     config: JSON!
     location: JSON!
@@ -47,7 +45,7 @@ module.exports = gql`
 
   type Ad {
     id: ID!
-    type: AdType
+    status: AdStatus
     category: Category
     location: Location
     title: String
@@ -72,18 +70,26 @@ module.exports = gql`
     item: String
   }
 
+  type PageInfo {
+    endCursor: String
+    hasNextPage: Boolean
+  }
+
+  type AdsEdge {
+    cursor: String
+    node: Ad
+  }
+
+  type Ads {
+    edges: [AdsEdge]
+    pageInfo: PageInfo
+  }
+
   ## Queries
 
   type QuerySearch_relay {
     edges: [AdEdge]
     pageInfo: PageInfo!
-  }
-
-  type PageInfo {
-    hasNextPage: Boolean!
-    hasPreviousPage: Boolean!
-    startCursor: String
-    endCursor: String
   }
 
   type AdEdge {
@@ -102,14 +108,13 @@ module.exports = gql`
     ERROR
   }
 
-  enum AdType {
-    SELL
-    BUY
-    RENT
+  enum AdStatus {
+    APPROVED
+    PENDING
+    REJECTED
   }
 
   input createAdInput { # TODO: make those fields required
-    type: AdType
     category: categoryInput
     location: locationInput
     title: String

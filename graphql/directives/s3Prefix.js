@@ -1,5 +1,5 @@
 const { SchemaDirectiveVisitor } = require('apollo-server');
-const { defaultFieldResolver, GraphQLString, GraphQLList } = require('graphql');
+const { defaultFieldResolver, GraphQLString, isListType } = require('graphql');
 
 class S3Prefix extends SchemaDirectiveVisitor {
   visitFieldDefinition(field) {
@@ -15,7 +15,7 @@ class S3Prefix extends SchemaDirectiveVisitor {
         }
       }
 
-      if (field.type === GraphQLList) {
+      if (isListType(field.type)) {
         if (result) {
           return result.map((key) => [process.env.AWS_S3_PREFIX, key].join(''));
         } else {
