@@ -10,10 +10,10 @@ module.exports = {
   async createAd(_, { data }, { headers }) {
     console.log('Mutation:createAd');
     try {
-      // const authentication = await authUser(headers.authorization);
-      // if (!authentication) return new AuthenticationError('NotAuthorizedException');
+      const authentication = await authUser(headers.authorization);
+      if (!authentication) return new AuthenticationError('NotAuthorizedException');
 
-      // data.user = ObjectID(authentication.mongodb);
+      data.user = ObjectID(authentication.mongodb);
       data.expireAt = new Date(new Date().getTime() + 41 * 86400000); // expire after 41 day
       data.status = 'APPROVED';
 
@@ -41,15 +41,15 @@ module.exports = {
     console.log('🚀 ~ file: ad.js ~ line 41 ~ updateAd ~ data', data);
     console.log('Mutation: updateAd');
     try {
-      // const authentication = await authUser(headers.authorization);
-      // if (!authentication) return new AuthenticationError('NotAuthorizedException');
+      const authentication = await authUser(headers.authorization);
+      if (!authentication) return new AuthenticationError('NotAuthorizedException');
 
       // authenticate user with document
-      // const isDocumentExist = await MDB.collection('ads').countDocuments({
-      //   _id: ObjectID(data.id),
-      //   user: ObjectID(authentication.mongodb),
-      // });
-      // if (!isDocumentExist) return new AuthenticationError('NotAuthorizedException');
+      const isDocumentExist = await MDB.collection('ads').countDocuments({
+        _id: ObjectID(data.id),
+        user: ObjectID(authentication.mongodb),
+      });
+      if (!isDocumentExist) return new AuthenticationError('NotAuthorizedException');
 
       if (data.removePhotos && data.removePhotos.length) {
         const keys = data.removePhotos.map((key) => ({

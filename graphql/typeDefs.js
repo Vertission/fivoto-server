@@ -40,7 +40,8 @@ module.exports = gql`
     profile: String @s3Prefix
     createdAt: Date
     updatedAt: Date
-    publishedAds: [Ad]
+
+    publishedAds: [Ad] # FIX: relay style fetching
   }
 
   type Ad {
