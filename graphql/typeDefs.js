@@ -25,7 +25,7 @@ module.exports = gql`
 
   type Mutation {
     # user
-    updateUser(name: String, profile: String): ID!
+    updateUser(data: updateUserInput!): ID!
     # ad
     createAd(data: createAdInput!): ID!
     updateAd(data: updateAdInput!): ID!
@@ -147,6 +147,11 @@ module.exports = gql`
   input categoryInput {
     field: String
     item: String
+  }
+
+  input updateUserInput {
+    name: String
+    profile: String
   }
 
   input searchInput {
