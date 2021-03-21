@@ -38,7 +38,6 @@ module.exports = {
     }
   },
   async updateAd(_, { data }, { headers }) {
-    console.log('🚀 ~ file: ad.js ~ line 41 ~ updateAd ~ data', data);
     console.log('Mutation: updateAd');
     try {
       const authentication = await authUser(headers.authorization);
@@ -78,7 +77,7 @@ module.exports = {
       const document = Object.assign({}, oldDocument, data);
 
       await MDB.collection('ads').replaceOne({ _id: ObjectID(data.id) }, document);
-      return document._id;
+      return document.id;
     } catch (error) {
       console.log('updateAd -> error', error);
 
