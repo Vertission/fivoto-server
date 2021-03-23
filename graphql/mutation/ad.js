@@ -1,5 +1,6 @@
 const { ApolloError, AuthenticationError } = require('apollo-server');
 const { ObjectID } = require('mongodb');
+const slugify = require('slugify');
 const Sentry = require('@sentry/node');
 
 const MDB = require('../../database/local');
@@ -76,8 +77,23 @@ module.exports = {
 
       const document = Object.assign({}, oldDocument, data);
 
+      // generate slug
+      document.slug = slugify(
+        [
+          document.title,
+          document.location.city,
+          document.location.district,
+          document.category.item,
+          document.category.field,
+          document.id,
+        ].join(' '),
+        {
+          lower: true,
+        }
+      );
+
       await MDB.collection('ads').replaceOne({ _id: ObjectID(data.id) }, document);
-      return document.id;
+      return document.slug;
     } catch (error) {
       console.log('updateAd -> error', error);
 

@@ -28,7 +28,7 @@ module.exports = gql`
     updateUser(data: updateUserInput!): ID!
     # ad
     createAd(data: createAdInput!): ID!
-    updateAd(data: updateAdInput!): ID!
+    updateAd(data: updateAdInput!): String!
     deleteAd(id: ID!): ID!
   }
 
@@ -46,6 +46,7 @@ module.exports = gql`
 
   type Ad {
     id: ID!
+    slug: String
     status: AdStatus
     category: Category
     location: Location
