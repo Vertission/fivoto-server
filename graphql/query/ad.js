@@ -1,4 +1,5 @@
 const { ApolloError } = require('apollo-server');
+const slugify = require('slugify');
 
 const MDB = require('../../database/local');
 const mongoist = require('../../database/local/mongoist');
@@ -36,7 +37,6 @@ module.exports = {
   async ads(_, { first, after, filter }, {}, info) {
     try {
       const attributes = intersection.ad(graphqlFields(info).edges.node);
-      console.log({ attributes });
 
       const findOpts = {};
 
@@ -65,11 +65,25 @@ module.exports = {
         fields: attributes,
       });
 
-      console.log(results);
+      const generateSlug = (data) => {
+        return slugify(
+          [
+            data.title,
+            data.location.city,
+            data.location.district,
+            data.category.item,
+            data.category.field,
+            data.id,
+          ].join(' '),
+          {
+            lower: true,
+          }
+        );
+      };
 
       const edges = results.map((node) => ({
         cursor: node.id,
-        node: node,
+        node: { ...node, slug: generateSlug(node) },
       }));
 
       return {

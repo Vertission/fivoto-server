@@ -13,8 +13,6 @@ module.exports = {
       const authentication = await authUser(headers.authorization);
       if (!authentication) return new AuthenticationError('NotAuthorizedException');
 
-      console.log(data);
-
       const updatedUser = await User.findByIdAndUpdate(authentication.mongodb, data);
 
       if (!updatedUser) return new AuthenticationError('NotAuthorizedException');
