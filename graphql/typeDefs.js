@@ -28,7 +28,7 @@ module.exports = gql`
     updateUser(data: updateUserInput!): ID!
     # ad
     createAd(data: createAdInput!): ID!
-    updateAd(data: updateAdInput!): String!
+    updateAd(data: updateAdInput!): ID!
     deleteAd(id: ID!): ID!
   }
 

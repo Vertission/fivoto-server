@@ -22,6 +22,20 @@ module.exports = {
 
       if (!document) return { id };
 
+      document.slug = slugify(
+        [
+          document.title,
+          document.location.city,
+          document.location.district,
+          document.category.item,
+          document.category.field,
+          document.id,
+        ].join(' '),
+        {
+          lower: true,
+        }
+      );
+
       return document;
     } catch (error) {
       console.log('Query:ad', error);
