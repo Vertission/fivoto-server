@@ -49,6 +49,7 @@ module.exports = {
     }
   },
   async ads(_, { first, after, filter }, {}, info) {
+    console.log('Query:ads');
     try {
       const attributes = intersection.ad(graphqlFields(info).edges.node);
 
@@ -118,5 +119,4 @@ module.exports = {
       return new ApolloError('InternalServerError', code, error);
     }
   },
-  async adPhotos(_, { id }) {},
 };

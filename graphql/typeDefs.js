@@ -9,7 +9,6 @@ module.exports = gql`
     me: User!
     # ad
     ad(id: ID!): Ad!
-    adPhotos(id: ID!): Ad!
     ads(first: Int, after: String, filter: searchFilterInput): Ads!
     # utils
     config: JSON!
@@ -45,7 +44,7 @@ module.exports = gql`
   }
 
   type Ad {
-    id: ID!
+    id: ID
     slug: String
     status: AdStatus
     category: Category
