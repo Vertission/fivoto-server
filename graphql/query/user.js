@@ -58,7 +58,7 @@ module.exports = {
           .promise();
 
         user.id = user._id;
-        return user;
+        return { ...user, email: authentication.email, email_verified: authentication.email_verified };
       }
     } catch (error) {
       console.log('Query:Me', error);
