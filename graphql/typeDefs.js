@@ -9,24 +9,13 @@ module.exports = gql`
     me: User!
     # ad
     ad(id: ID!): Ad!
-    adPhotos(id: ID!): Ad!
-    search(
-      offset: Int
-      limit: Int
-      query: String
-      category: categoryInput
-      location: locationInput
-    ): QuerySearch!
-    # relay style pagination
-    search_relay(
-      first: Int
-      after: ID
-      filter: searchFilterInput
-    ): QuerySearch_relay
+    ads(first: Int, after: String, filter: searchFilterInput): Ads!
     # utils
-    location: JSON
-    category: JSON
-    country: JSON
+    config: JSON!
+    location: JSON!
+    category: JSON!
+    country: JSON!
+    fields: JSON!
   }
 
   # custom directives
@@ -35,10 +24,10 @@ module.exports = gql`
 
   type Mutation {
     # user
-    updateUser(data: updateUserInput!): User!
+    updateUser(data: updateUserInput!): ID!
     # ad
     createAd(data: createAdInput!): ID!
-    updateAd(data: updateAdInput!): Ad!
+    updateAd(data: updateAdInput!): ID!
     deleteAd(id: ID!): ID!
   }
 
@@ -46,14 +35,18 @@ module.exports = gql`
     id: ID!
     name: String
     email: String
+    email_verified: Boolean
+    profile: String @s3Prefix
     createdAt: Date
     updatedAt: Date
-    publishedAds: [Ad]
+
+    publishedAds: [Ad] # FIX: relay style fetching
   }
 
   type Ad {
-    id: ID!
-    type: AdType
+    id: ID
+    slug: String
+    status: AdStatus
     category: Category
     location: Location
     title: String
@@ -78,18 +71,26 @@ module.exports = gql`
     item: String
   }
 
+  type PageInfo {
+    endCursor: String
+    hasNextPage: Boolean
+  }
+
+  type AdsEdge {
+    cursor: String
+    node: Ad
+  }
+
+  type Ads {
+    edges: [AdsEdge]
+    pageInfo: PageInfo
+  }
+
   ## Queries
 
   type QuerySearch_relay {
     edges: [AdEdge]
     pageInfo: PageInfo!
-  }
-
-  type PageInfo {
-    hasNextPage: Boolean!
-    hasPreviousPage: Boolean!
-    startCursor: String
-    endCursor: String
   }
 
   type AdEdge {
@@ -108,20 +109,13 @@ module.exports = gql`
     ERROR
   }
 
-  enum AdType {
-    SELL
-    BUY
-    RENT
-  }
-
-  ## INPUT
-  input updateUserInput {
-    name: String
-    email: String
+  enum AdStatus {
+    APPROVED
+    PENDING
+    REJECTED
   }
 
   input createAdInput { # TODO: make those fields required
-    type: AdType
     category: categoryInput
     location: locationInput
     title: String
@@ -154,6 +148,11 @@ module.exports = gql`
   input categoryInput {
     field: String
     item: String
+  }
+
+  input updateUserInput {
+    name: String
+    profile: String
   }
 
   input searchInput {

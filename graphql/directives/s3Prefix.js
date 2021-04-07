@@ -1,16 +1,27 @@
-const config = require("../../config/index.json");
-const { SchemaDirectiveVisitor } = require("apollo-server");
-const { defaultFieldResolver } = require("graphql");
+const { SchemaDirectiveVisitor } = require('apollo-server');
+const { defaultFieldResolver, GraphQLString, isListType } = require('graphql');
 
 class S3Prefix extends SchemaDirectiveVisitor {
   visitFieldDefinition(field) {
     const { resolve = defaultFieldResolver } = field;
     field.resolve = async function (...args) {
       const result = await resolve.apply(this, args);
-      if (!result) return [];
-      else if (typeof result === "string")
-        return [config.s3_prefix, result].join("");
-      else return result.map((key) => [config.s3_prefix, key].join(""));
+
+      if (field.type === GraphQLString) {
+        if (result) {
+          return [process.env.AWS_S3_PREFIX, result].join('');
+        } else {
+          return null;
+        }
+      }
+
+      if (isListType(field.type)) {
+        if (result) {
+          return result.map((key) => [process.env.AWS_S3_PREFIX, key].join(''));
+        } else {
+          return [];
+        }
+      }
     };
   }
 }

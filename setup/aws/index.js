@@ -1,8 +1,7 @@
-const config = require("../../config/index.json");
-const aws = require("aws-sdk");
+const aws = require('aws-sdk');
 
 aws.config.update({
-  region: config.aws.REGION,
-  accessKeyId: config.aws.ACCESS_KEY_ID,
-  secretAccessKey: config.aws.SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 });

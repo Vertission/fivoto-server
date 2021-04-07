@@ -1,30 +1,30 @@
-const config = require("../../config/index.json");
-const { ApolloError, AuthenticationError } = require("apollo-server");
-const chalk = require("chalk");
-const Sentry = require("@sentry/node");
+const { ApolloError, AuthenticationError } = require('apollo-server');
+const Sentry = require('@sentry/node');
+const { boolean } = require('boolean');
 
-const User = require("../../database/remote/schema/user");
-const authUser = require("../../utils/authUser");
-const cognito = require("../../setup/aws/cognito");
+const User = require('../../database/remote/model/user');
+const authUser = require('../../utils/authUser');
+const cognito = require('../../setup/aws/cognito');
 
 module.exports = {
   async me(_, __, { headers }) {
-    console.log("Query:me");
+    console.log('Query:me');
     try {
       const authentication = await authUser(headers.authorization);
-      if (!authentication)
-        return new AuthenticationError("NotAuthorizedException");
+      if (!authentication) return new AuthenticationError('NotAuthorizedException');
 
-      const user = await User.findById(authentication.mongodb);
+      const user = await User.findById(authentication.mongodb).lean();
+
+      authentication.email_verified = boolean(authentication.email_verified);
 
       if (user) {
         user.id = user._id;
-        return user;
+        return { ...user, email: authentication.email, email_verified: authentication.email_verified };
       } else {
         // insert user
         const newUser = new User({
-          email: authentication.email,
           name: authentication.name,
+          profile: null,
         });
 
         await newUser.save();
@@ -34,10 +34,8 @@ module.exports = {
         await cognito
           .adminUpdateUserAttributes(
             {
-              UserAttributes: [
-                { Name: "custom:mongodb", Value: String(user._id) },
-              ],
-              UserPoolId: config.aws.COGNITO_USER_POOL_ID,
+              UserAttributes: [{ Name: 'custom:mongodb', Value: String(user._id) }],
+              UserPoolId: process.env.AWS_COGNITO_USER_POOL_ID,
               Username: authentication.sub,
             },
             (error) => {
@@ -49,8 +47,8 @@ module.exports = {
         await cognito
           .adminDeleteUserAttributes(
             {
-              UserAttributeNames: ["name"],
-              UserPoolId: config.aws.COGNITO_USER_POOL_ID,
+              UserAttributeNames: ['name'],
+              UserPoolId: process.env.AWS_COGNITO_USER_POOL_ID,
               Username: authentication.sub,
             },
             (error) => {
@@ -60,17 +58,17 @@ module.exports = {
           .promise();
 
         user.id = user._id;
-        return user;
+        return { ...user, email: authentication.email, email_verified: authentication.email_verified };
       }
     } catch (error) {
-      console.log("Query:Me", error);
+      console.log('Query:Me', error);
 
       const scope = new Sentry.Scope();
-      scope.setTag("resolver", "Query:me");
-      scope.setContext("header", headers);
+      scope.setTag('resolver', 'Query:me');
+      scope.setContext('header', headers);
 
       const code = Sentry.captureException(error, scope);
-      return new ApolloError("InternalServerError", code, error);
+      return new ApolloError('InternalServerError', code, error);
     }
   },
 };

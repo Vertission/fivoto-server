@@ -1,7 +1,7 @@
 require('dotenv').config();
 const { ApolloServer } = require('apollo-server');
 
-require('./setup/sentry');
+// require('./setup/sentry');
 require('./setup/aws');
 require('./database/local');
 require('./database/remote');
