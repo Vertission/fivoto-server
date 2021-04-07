@@ -29,7 +29,7 @@ module.exports = {
 
         await newUser.save();
 
-        const user = await User.findById(newUser._id);
+        const user = await User.findById(newUser._id).lean();
 
         await cognito
           .adminUpdateUserAttributes(
